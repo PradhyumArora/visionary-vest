@@ -1,102 +1,82 @@
-import { GitGraph, Plus, UserIcon } from "lucide-react";
-import Link from "next/link";
-import React from "react";
+/** @format */
+"use client";
 
-interface SidebarProps {
-  children: React.ReactNode;
-}
+import { useState } from "react";
+// import { Nav } from "./ui/nav";
 
-const Sidebar: React.FC<SidebarProps> = ({ children }) => {
+type Props = {};
+
+import {
+  ShoppingCart,
+  LayoutDashboard,
+  Settings,
+  ChevronRight,
+  GitGraph,
+  User
+} from "lucide-react";
+import { Button } from "./ui/button";
+
+import { useWindowWidth } from "@react-hook/window-size";
+import { Nav } from "./nav";
+
+export default function SideNavbar({}: Props) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const onlyWidth = useWindowWidth();
+  const mobileWidth = onlyWidth < 768;
+
+  function toggleSidebar() {
+    setIsCollapsed(!isCollapsed);
+  }
+
   return (
-    <div
-      className="
-        hidden 
-        md:flex 
-        flex-col 
-        gap-y-2 
-        
-        h-[700px]  //coz height was not setting to full 
-        w-[300px]
-        p-2
-      "
-    >
-      <div
-        className="bg-slate-800
-       rounded-lg
-       h-full
-       w-full"
-      >
-        <div className="flex flex-col gap-y-4 px-5 py-4">
-          <Link
-            href="/dashboard/account"
-            className="  flex  flex-row h-auto items-center  w-full
-            gap-x-4
-            text-md
-            font-medium
-            cursor-pointer
-            hover:text-white
-            transition
-            text-neutral-400
-            py-1"
+    <div className="relative min-w-[90px] border-r px-3  pb-10 pt-24 ">
+      {!mobileWidth && (
+        <div className="absolute right-[-20px] top-7">
+          <Button
+            onClick={toggleSidebar}
+            variant="secondary"
+            className=" rounded-full p-2"
           >
-            <UserIcon />
-            <p className="truncate w-full"> My account</p>
-          </Link>
+            <ChevronRight />
+          </Button>
         </div>
-        <div className="flex flex-col gap-y-4 px-5 py-4">
-          <Link
-            href="/dashboard/portfolio"
-            className="  flex  flex-row h-auto items-center  w-full
-            gap-x-4
-            text-md
-            font-medium
-            cursor-pointer
-            hover:text-white
-            transition
-            text-neutral-400
-            py-1"
-          >
-            <GitGraph />
-            <p className="truncate w-full"> My Portfolio</p>
-          </Link>
-        </div>
-        <div className="flex flex-col gap-y-4 px-5 py-4">
-          <Link
-            href="/dashboard/portfolio"
-            className="  flex  flex-row h-auto items-center  w-full
-            gap-x-4
-            text-md
-            font-medium
-            cursor-pointer
-            hover:text-white
-            transition
-            text-neutral-400
-            py-1"
-          >
-            <Plus />
-            <p className="truncate w-full"> Add Funds</p>
-          </Link>
-        </div>
-        <div className="flex flex-col gap-y-44 px-5 py-4">
-          <Link
-            href="/dashboard/portfolio"
-            className="  flex  flex-row h-auto items-center  w-full
-            gap-x-4
-            text-md
-            font-medium
-            cursor-pointer
-            hover:text-white
-            transition
-            text-neutral-400
-            py-1"
-          >
-            <GitGraph />
-            <p className="truncate w-full"> Settings</p>
-          </Link>
-        </div>
-      </div>
+      )}
+      <Nav
+        isCollapsed={mobileWidth ? true : isCollapsed}
+        links={[
+          {
+            title: "John Doe",
+            href: "/dashboard/settings",
+            icon: User,
+            variant: "ghost"
+          },
+          {
+            title: "Dashboard",
+            href: "/dashboard",
+            icon: LayoutDashboard,
+            variant: "default"
+          },
+          {
+            title: "Portfolio",
+            href: "/dashboard/portfolio",
+            icon: GitGraph,
+            variant: "ghost"
+          },
+          {
+            title: "Ordrs",
+            href: "/dashboard/orders",
+            icon: ShoppingCart,
+            variant: "ghost"
+          },
+          {
+            title: "Settings",
+            href: "/dashboard/settings",
+            icon: Settings,
+            variant: "ghost"
+          }
+        ]}
+      />
     </div>
   );
-};
-
-export default Sidebar;
+}

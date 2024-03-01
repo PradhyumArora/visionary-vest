@@ -1,5 +1,5 @@
 import Sidebar from "@/components/Sidebar";
-import { FC } from "react";
+import { Children, FC } from "react";
 
 interface layoutProps {
   children: React.ReactNode;
@@ -7,10 +7,11 @@ interface layoutProps {
 
 const layout: FC<layoutProps> = ({ children }) => {
   return (
-    <div className="bg-black">
-      <Sidebar>{children}</Sidebar>
-    </div>
-  );
+    <main className="h-screen w-full bg-black text-white flex">
+    <Sidebar />
+    <section className="p-8 w-full">{children}</section>
+  </main>
+  )
 };
 
 export default layout;
