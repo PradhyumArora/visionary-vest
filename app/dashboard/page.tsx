@@ -1,6 +1,8 @@
 import BarChart from '@/components/BarChart';
 import Sidebar from '@/components/Sidebar'
+import { Button } from '@/components/ui/button';
 import Card, {  CardContent, CardProps } from '@/components/ui/card';
+import { EvervaultCard } from '@/components/ui/evervault-card';
 import {  CoinsIcon, CreditCard, DollarSign, Users } from 'lucide-react';
 import React from 'react'
 
@@ -32,7 +34,7 @@ const cardData: CardProps[] = [
 ];
 const page = () => {
   return (
-    <div className='flex flex-col gap-5 w-full'>
+    <div className='flex flex-col gap-5 w-full min-h-screen'>
         <section className='grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4'> 
         {cardData.map((d, i) => (
           <Card
@@ -50,7 +52,7 @@ const page = () => {
           <BarChart />
         </CardContent>
 
-        
+
         </section>
     </div>
   )

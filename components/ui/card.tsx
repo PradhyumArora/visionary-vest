@@ -16,7 +16,7 @@ export default function Card(props: CardProps) {
     <CardContent>
       <section className="flex justify-between gap-2">
         {/* label */}
-        <p className="text-sm">{props.label}</p>
+        <p className="text-xl font-semibold">{props.label}</p>
         {/* icon */}
         <props.icon className="h-4 w-4 text-gray-400" />
       </section>

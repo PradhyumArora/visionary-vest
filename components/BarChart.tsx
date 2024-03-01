@@ -70,17 +70,17 @@ export default function BarChart({}: Props) {
           dataKey={"name"}
           tickLine={false}
           axisLine={false}
-          stroke="#888888"
+          stroke="#ffffff"
           fontSize={12}
         />
         <YAxis
           tickLine={false}
           axisLine={false}
-          stroke="#888888"
+          stroke="#ffffff"
           fontSize={12}
           tickFormatter={(value) => `$${value}`}
         />
-        <Bar dataKey={"total"} radius={[4, 4, 0, 0]} />
+        <Bar dataKey={"total"} radius={[4, 4, 0, 0]} fill="#007bff" />
       </BarGraph>
     </ResponsiveContainer>
   );
