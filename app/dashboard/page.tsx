@@ -52,7 +52,7 @@ const page = () => {
           <BarChart />
         </CardContent>
 
-
+        
         </section>
     </div>
   )
