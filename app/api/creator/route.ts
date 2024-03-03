@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
           id: parseInt(id),
         },
       });
-    console.log(creator)
+    // console.log(creator)?
     if(!creator){
         return Response.json({status:"error", message:"Creator not found"})
     }

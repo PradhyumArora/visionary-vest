@@ -4,7 +4,6 @@ const data = require('../lib/influencers.json')
 const prisma = new PrismaClient();
 
 async function main() {
-    console.log(data)
     // Loop over each influencer in the data and create a record in the database
     // for (const influencer of data) {
     //     await prisma.influencer.create({

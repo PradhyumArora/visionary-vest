@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import Router from "next/router";
 import links from "@/lib/videos";
 import PriceChart from "@/components/PriceChart";
+import StockHolding from "@/components/StockHolding";
+
 import {
   Dialog,
   DialogContent,
@@ -185,12 +187,8 @@ const Profile =  ({ params }: { params: { cid: Int } }) => {
                   </svg>
                 </button>
               </div>
-              <div className="w-full">
-                <p>
-                  28 year old in Puerto Rico living life to the fullest or
-                  whatever Join the movement and Be A Maverick:
-                  https://shoploganpaul.com/
-                </p>
+              <div className="block">
+                  <StockHolding influencerId={params.cid} />
               </div>
               <div className="w-full self-end">
                 <div className="w-80 flex">

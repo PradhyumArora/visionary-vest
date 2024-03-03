@@ -20,9 +20,9 @@ const Navbar = () => {
     }
   };
   return (
-    <header className="z-[50] fixed top-0 w-screen border-b bg-black">
-      <nav className="container flex h-16 justify-between items-center mx-auto bg-black">
-        <Image src="/logo.png" alt="logo" width={50} height={50} />
+    <header className="z-[50] fixed top-0 w-full bg-black border-b py-1 ">
+      <nav className="container flex h-16 justify-between items-center max-w-[100rem] mx-auto bg-black">
+        <Image src="/logo.png" alt="logo" width={50} height={50} onClick={handleClick}/>
         <SearchBar />
         <div className="flex items-center gap-8">
           <Link href="/dashboard">Dashboard</Link>
