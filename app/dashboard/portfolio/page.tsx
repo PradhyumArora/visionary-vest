@@ -1,6 +1,5 @@
 import React from "react";
 import Card, { CardContent, CardProps } from "@/components/ui/card";
-import SCard from "@/components/ui/stockcard";
 import { ArrowUpDownIcon, DollarSign, Users } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -91,7 +90,9 @@ const invoices = [
     profitloss: 110034,
   },
 ]
-const page = () => {
+
+const page = async () => {
+
   const totalBuyValue = invoices.reduce((total, invoice) => total + invoice.buyvalue, 0);
   const totalCurValue = invoices.reduce((total, invoice) => total + invoice.curvalue, 0);
   const PL = invoices.reduce((total, invoice) => total + (invoice.curvalue-invoice.buyvalue), 0);
@@ -109,7 +110,7 @@ const page = () => {
         ))}
       </section>
       <CardContent>
-        <h2 className="text-stone-200 text-5xl ">
+        <h2 className="text-stone-200 text-2xl my-3">
           Holding Details
         </h2>
         <section className="w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4 rounded">
@@ -125,39 +126,44 @@ const page = () => {
               />
               <Separator />
             </>
-          ))} */}<Table>
-      
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[100px]">Symbol</TableHead>
-          <TableHead>Total qty.</TableHead>
-          <TableHead>Buy Price</TableHead>
-          <TableHead>Buy Val.</TableHead>
-          <TableHead>Cur. Val.</TableHead>
-          <TableHead>P/L</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={Date.now()}>
-            <TableCell className="font-medium">{invoice.symbol}</TableCell>
-            <TableCell>{invoice.totalqty}</TableCell>
-            <TableCell>{invoice.buyprice}</TableCell>
-            <TableCell>{invoice.buyvalue}</TableCell>
-            <TableCell>{invoice.curvalue}</TableCell>
-            <TableCell className="text-emerald-400"> + {invoice.curvalue - invoice.buyvalue}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-      <TableFooter>
-        <TableRow className="">
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell>{totalBuyValue}</TableCell>
-          <TableCell>{totalCurValue}</TableCell>
-          <TableCell className="">{PL}</TableCell>
-        </TableRow>
-      </TableFooter>
-    </Table>
+          ))} */}
+          <Table>
+
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">Symbol</TableHead>
+                <TableHead>Total qty.</TableHead>
+                <TableHead>Buy Price</TableHead>
+                <TableHead>Buy Val.</TableHead>
+                <TableHead>Cur. Val.</TableHead>
+                <TableHead>P/L</TableHead>
+              </TableRow>
+            </TableHeader>
+
+            <TableBody>
+              {invoices.map((invoice) => (
+                <TableRow key={Date.now()}>
+                  <TableCell className="font-medium">{invoice.symbol}</TableCell>
+                  <TableCell>{invoice.totalqty}</TableCell>
+                  <TableCell>{invoice.buyprice}</TableCell>
+                  <TableCell>{invoice.buyvalue}</TableCell>
+                  <TableCell>{invoice.curvalue}</TableCell>
+                  <TableCell className="text-emerald-400"> + {invoice.curvalue - invoice.buyvalue}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+
+            <TableFooter>
+              <TableRow className="">
+                <TableCell colSpan={3}>Total</TableCell>
+                <TableCell>{totalBuyValue}</TableCell>
+                <TableCell>{totalCurValue}</TableCell>
+                <TableCell className="">{PL}</TableCell>
+              </TableRow>
+            </TableFooter>
+
+          </Table>
+
         </section>
       </CardContent>
     </div>

@@ -1,0 +1,107 @@
+// Define the datasource with PostgreSQL provider
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Define the generator
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+model User {
+  id                String             @id
+  activeBuyOrders   ActiveBuyOrders[]  @relation("UserActiveBuyOrders")
+  activeSellOrders  ActiveSellOrders[] @relation("UserActiveSellOrders")
+  completedOrders   CompletedOrders[]  @relation("UserCompletedOrders")
+  currentStockHoldings StockHolding[]
+}
+
+model ActiveBuyOrders {
+  id      Int    @id @default(autoincrement())
+  orderId Int
+  order   Order  @relation(fields: [orderId], references: [id])
+  userId  String
+  user    User   @relation("UserActiveBuyOrders", fields: [userId], references: [id])
+}
+
+model ActiveSellOrders {
+  id      Int    @id @default(autoincrement())
+  orderId Int
+  order   Order  @relation(fields: [orderId], references: [id])
+  userId  String
+  user    User   @relation("UserActiveSellOrders", fields: [userId], references: [id])
+}
+
+model CompletedOrders {
+  id      Int    @id @default(autoincrement())
+  orderId Int
+  order   Order  @relation(fields: [orderId], references: [id])
+  userId  String
+  user    User   @relation("UserCompletedOrders", fields: [userId], references: [id])
+}
+
+model Order {
+  id              Int               @id @default(autoincrement())
+  influencerId    Int               // Add this line to create a relation
+  influencer      Influencer        @relation(fields: [influencerId], references: [id]) // This line establishes the relationship
+  price           Float
+  quantity        Int
+  ActiveBuyOrders ActiveBuyOrders[]
+  ActiveSellOrders ActiveSellOrders[]
+  CompletedOrders CompletedOrders[]
+}
+
+
+
+// model Investment {
+//   id          Int           @id @default(autoincrement())
+//   buyPrice    Float
+//   sharesQuant Int
+//   user        User    @relation(fields: [userId], references: [id])
+//   userId      String  // Foreign key for user
+//   influencer    Influencer @relation(fields: [influencerId], references: [id])
+//   influencerId   String  // Foreign key for creator
+// }
+
+model StockHolding {
+  id          Int        @id @default(autoincrement())
+  influencerId Int       // Foreign key for Influencer
+  influencer  Influencer @relation(fields: [influencerId], references: [id])
+  buyPrice    Float      // The price at which the stock was bought
+  quantity    Int        // The number of shares held
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+}
+
+// Define the Order model
+// model Order {
+//   id          Int     @id @default(autoincrement())
+//   stockName   String
+//   userId      String
+//   price       Float
+//   quantity    Int
+//   askingPrice Float?  // Nullable, use for active orders
+//   buyPrice    Float?  // Nullable, use for past orders
+//   sellPrice   Float?  // Nullable, use for past orders
+//   status      String  // Use this to distinguish between "active" and "past" orders
+//   orderType   String
+//
+//   @@map("orders") // Maps the model to the "orders" table in the database
+// }
+
+
+model Influencer {
+  id                   Int            @id @default(autoincrement())
+  name                 String
+  age                  Int
+  image                String
+  content              String[]
+  last1MonthEarnings   Float
+  last6MonthsEarnings  Float
+  last12MonthsEarnings Float
+  currentPrice         Float
+  stockHoldings        StockHolding[] // Stocks held by users, related to this influencer
+  orders               Order[]        // Connects orders to the influencer
+}

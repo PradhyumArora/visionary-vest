@@ -1,7 +1,7 @@
 /** @format */
 "use client";
 
-import { useState } from "react";
+import {useEffect, useState} from "react";
 // import { Nav } from "./ui/nav";
 
 type Props = {};
@@ -21,21 +21,23 @@ import { Nav } from "./nav";
 
 export default function SideNavbar({}: Props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-
+    let mobileWidth = false;
   const onlyWidth = useWindowWidth();
-  const mobileWidth = onlyWidth < 768;
+  useEffect(() =>{
+      mobileWidth = onlyWidth < 768;
+  }, [])
+
 
   function toggleSidebar() {
     setIsCollapsed(!isCollapsed);
   }
 
   return (
-    <div className="relative min-w-[90px] border-r px-3  pb-10 pt-24 ">
+    <div className="relative min-w-[90px] w-auto border-r px-3 pb-10 pt-24 ">
       {!mobileWidth && (
         <div className="absolute right-[-20px] top-7">
           <Button
             onClick={toggleSidebar}
-            variant="secondary"
             className=" rounded-full p-2"
           >
             <ChevronRight />
@@ -64,7 +66,7 @@ export default function SideNavbar({}: Props) {
             variant: "ghost"
           },
           {
-            title: "Ordrs",
+            title: "Orders",
             href: "/dashboard/orders",
             icon: ShoppingCart,
             variant: "ghost"
