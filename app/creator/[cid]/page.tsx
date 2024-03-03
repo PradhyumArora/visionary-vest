@@ -93,6 +93,10 @@ const Profile =  ({ params }: { params: { cid: Int } }) => {
         influencer: creatorData
       }
     })
+      if(res.data.status === "fail") {
+        toast.error("User does not have enough funds")
+        return;
+      }
       toast.success("Order placed successfully!")
       router.push("/dashboard/orders")
     } catch (err) {
@@ -113,6 +117,10 @@ const Profile =  ({ params }: { params: { cid: Int } }) => {
         influencer: creatorData
       }
     })
+      if(res.data.status ==="fail") {
+        toast.error("User does not have stocks to sell")
+        return;
+      }
       toast.success("Order placed successfully!")
       router.push("/dashboard/orders")
     } catch (err) {
@@ -124,7 +132,7 @@ const Profile =  ({ params }: { params: { cid: Int } }) => {
 
   return (
       <div className="section-container w-full min-h-screen border-5 m-0 px-3 lg:px-0">
-        <div className="wrapper lg:w-4/5 mx-auto my-2">
+        <div className="wrapper lg:w-4/5 mx-auto my-3">
           <button
               className="flex items-center gap-0 hover:gap-1 ps-1 hover:ps-0 transition-all linear max-w-fit cursor-pointer"
               onClick={() => {
@@ -135,8 +143,9 @@ const Profile =  ({ params }: { params: { cid: Int } }) => {
             <p className="inline-block">Back</p>
           </button>
         </div>
+
         <div
-            className="wrapper lg:w-4/5 border-2 rounded-xl mx-auto my-3 p-2 flex flex-col lg:flex-row md:gap-4 divide-2 overflow-auto">
+            className="wrapper lg:w-4/5 rounded-xl mx-auto my-3 p-2 flex flex-col lg:flex-row md:gap-4 divide-2 overflow-auto">
           <div className="rounded p-3 flex flex-col sm:flex-row items-center gap-4">
             <div
                 className="border-2 min-w-[200px] max-w-[250px] w-full rounded overflow-hidden self-start aspect-square">
@@ -274,7 +283,7 @@ const Profile =  ({ params }: { params: { cid: Int } }) => {
           </div>
         </div>
 
-        <div className="creator-details rounded-xl border-2 my-3 lg:w-4/5 mx-auto">
+        <div className="creator-details border-2 rounded-xl my-3 lg:w-4/5 mx-auto">
           <div className="h-full p-2 px-4">
             <div className="font-acumin flex gap-1 my-2">
               <span className="text-lg">₹</span>
@@ -416,6 +425,7 @@ const Profile =  ({ params }: { params: { cid: Int } }) => {
               </section>
             </div>
           </div>
+
         </div>
         <CreatorGallery links={links}/>
       </div>

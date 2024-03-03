@@ -1,4 +1,4 @@
-import Image from "next/image";
+ import Image from "next/image";
 import React from "react";
 import SearchBar from "@/components/SearchBar";
 import all_creators from "./creators";
@@ -7,21 +7,21 @@ import {fetchCreators} from "@/app/actions/creators";
 import Link from "next/link";
 
 const ExplorePage = async ({searchParams}: {searchParams}) => {
-    const creators = await fetchCreators();
+     let creator = await fetchCreators();
+     let creators;
 
   if (searchParams?.query) {
     console.log(searchParams?.query?.toLowerCase());
 
-    creators = all_creators.filter((titleObj) =>
+    creators = creator.filter((titleObj) =>
       titleObj.name.toLowerCase().includes(searchParams?.query?.toLowerCase())
     );
   } else {
-    creators = all_creators;
+    creators = creator;
   }
-    console.log(creators);
   return (
     <>
-      <div className="grid grid-cols-4 gap-4 p-5">
+      <div className="grid grid-cols-4 gap-10 p-5 mt-5 container">
         {/* <div className="max-w-4xl"> */}
         {creators.map((card, i) => (
           <Link href={`/creator/${card.id}`} key={card.id}>

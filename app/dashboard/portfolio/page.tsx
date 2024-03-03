@@ -12,26 +12,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-const cardData: CardProps[] = [
-  {
-    label: "Total Invested",
-    amount: "$2000",
-    discription: "",
-    icon: DollarSign,
-  },
-  {
-    label: "Total Returns",
-    amount: "$2350",
-    discription: "+18% from last month",
-    icon: Users,
-  },
-  {
-    label: "1D Return",
-    amount: "$23",
-    discription: "+0.01% from Yesterday",
-    icon: ArrowUpDownIcon,
-  },
-];
+import { auth, currentUser } from "@clerk/nextjs";
+import prismadb from "@/prisma";
+import {notFound} from "next/navigation";
+
+
 const invoices = [
   {
     symbol: "SJVN-EQ",
@@ -92,6 +77,39 @@ const invoices = [
 ]
 
 const page = async () => {
+  const { userId } = auth()
+  if(!userId) return notFound()
+  const user = await prismadb.user.findUnique({
+    where:{
+      id: userId
+    }
+  })
+  const cardData: CardProps[] = [
+      {
+    label: "Total Funds",
+    amount: `${user?.fundsAvailable}`,
+    discription: "",
+    icon: DollarSign,
+  },
+  {
+    label: "Total Invested",
+    amount: "$0",
+    discription: "",
+    icon: DollarSign,
+  },
+  {
+    label: "Total Returns",
+    amount: "$0",
+    discription: "+18% from last month",
+    icon: Users,
+  },
+  {
+    label: "1D Return",
+    amount: "$0",
+    discription: "+0.01% from Yesterday",
+    icon: ArrowUpDownIcon,
+  },
+];
 
   const totalBuyValue = invoices.reduce((total, invoice) => total + invoice.buyvalue, 0);
   const totalCurValue = invoices.reduce((total, invoice) => total + invoice.curvalue, 0);

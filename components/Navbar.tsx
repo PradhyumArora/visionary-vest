@@ -1,12 +1,20 @@
 "use client"
 import Image from "next/image";
 import Link from "next/link";
+import {useRouter} from "next/navigation";
 import SearchBar from "./SearchBar";
 import { useSession } from '@clerk/clerk-react';
 import {Button} from "@/components/ui/button";
 import { useClerk } from "@clerk/clerk-react";
 
 const Navbar = () => {
+
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push("/");
+  };
+
   const { session } = useSession();
   const { signOut } = useClerk();
     const handleSignOut = async () => {

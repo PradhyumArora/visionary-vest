@@ -1,9 +1,16 @@
+"use client";
 import React from "react";
 import GridLayout from "./GridLayout";
 import { Button } from "./ui/button";
 import { ContainerScroll } from "./ui/container-scroll-animation";
-
+import {useRouter} from "next/navigation";
 const Hero = () => {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push("/explore");
+  };
+
   return (
     <GridLayout>
       <div
@@ -20,7 +27,7 @@ const Hero = () => {
         </p>
         <div className="flex relative">
           <Button className="z-0 mx-4">Get Started</Button>
-          <Button className="z-0 mx-4 bg-transparent" variant="outline">
+          <Button className="z-0 mx-4 bg-transparent" variant="outline" onClick={handleClick} >
             Invest Now
           </Button>
         </div>

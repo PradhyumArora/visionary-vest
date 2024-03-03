@@ -124,39 +124,82 @@ export async function findManyOrdersById(id: number[]){
     });
     return orders;
 }
+export async function fluctuateSharePrices() {
+    // Calculate supply and demand based on active buy and sell orders
+    const buyOrders = await prisma.activeBuyOrders.findMany({ include: { order: true } });
+    const sellOrders = await prisma.activeSellOrders.findMany({ include: { order: true } });
+    const totalBuyQuantity = buyOrders.reduce((acc, order) => acc + order.order.quantity, 0);
+    const totalSellQuantity = sellOrders.reduce((acc, order) => acc + order.order.quantity, 0);
 
-export async function resolveMatchingOrders() {
-  const buyOrders = await prisma.activeBuyOrders.findMany({ orderBy: { orderId: 'asc' } })
-
-  const sellOrders = await prisma.activeSellOrders.findMany({ orderBy: { orderId: 'asc' } });
-
-  for (const buyOrder of buyOrders) {
-    for (const sellOrder of sellOrders) {
-        let buyOrder = await prisma.order.findUnique({
-            where: {
-                id: buyOrder.orderId
-            }
-        })
-        let sellOrder = await prisma.order.findUnique({
-            where: {
-                id: sellOrder.orderId
-            }
-        })
-
-      if (buyOrder.price === sellOrder.price) {
-
-          // await prisma.user.update({where: {id: buyOrder.userId}, data: {balance: {increment: buyOrder.price * buyOrder.quantity}}})
-          await prisma.completedOrders.create({data: { buyOrder }})
-          await prisma.completedOrders.create({data: { sellOrder }})
-
-
-          await prisma.activeBuyOrders.delete({where: {orderId: buyOrder.id}})
-          await prisma.activeSellOrders.delete({where: {orderId: sellOrder.id}})
-
-          matched = true;
-          break;
-      }
+    // Determine the mechanism for adjusting share prices based on supply and demand
+    let priceChangeFactor = 0; // Default to no change
+    if (totalBuyQuantity > totalSellQuantity) {
+        // Increase price when demand is higher than supply
+        priceChangeFactor = 0.05; // For example, increase by 5%
+    } else if (totalBuyQuantity < totalSellQuantity) {
+        // Decrease price when supply is higher than demand
+        priceChangeFactor = -0.05; // For example, decrease by 5%
     }
-  }
 
+    // Update influencer prices based on the calculated factor
+    const influencers = await prisma.influencer.findMany();
+    const updatedInfluencers = [];
+    for (const influencer of influencers) {
+        const updatedPrice = influencer.currentPrice * (1 + priceChangeFactor);
+        const updatedInfluencer = await prisma.influencer.update({
+            where: { id: influencer.id },
+            data: { currentPrice: updatedPrice }
+        });
+        updatedInfluencers.push(updatedInfluencer);
+    }
+
+    return updatedInfluencers;
 }
+
+export async function resolveMatchingOrders({existingUser, influencerId}: any) {
+    const buyOrders = await prisma.activeBuyOrders.findMany({ orderBy: { orderId: 'asc' }, include: { order: true } });
+    const sellOrders = await prisma.activeSellOrders.findMany({ orderBy: { orderId: 'asc' }, include: { order: true } });
+
+    for (const buyOrder of buyOrders) {
+        for (const sellOrder of sellOrders) {
+            const buyOrderDetails = buyOrder.order;
+            const sellOrderDetails = sellOrder.order;
+
+            if (buyOrderDetails && sellOrderDetails) {
+                if (sellOrderDetails.price <= buyOrderDetails.price) {
+                    const fundsRequired = sellOrderDetails.price * buyOrderDetails.quantity;
+
+                    // Add influencer to the user's current stock holdings
+                    await prisma.stockHolding.create({
+                        data: {
+                            influencerId,
+                            buyPrice: sellOrderDetails.price,
+                            quantity: buyOrderDetails.quantity,
+                            userId: existingUser
+                        } as any // <--- Adding this as a workaround for the typing issue
+                    });
+
+                    // Move buy order to completed orders
+                    await prisma.completedOrders.create({
+                        data: {
+                            order: { connect: { id: buyOrderDetails.id } }
+                        } as any
+                    });
+
+                    // Remove buy order from active buy orders
+                    await prisma.activeBuyOrders.delete({ where: { id: buyOrder.id } });
+
+                    // Remove sell order from active sell orders
+                    await prisma.activeSellOrders.delete({ where: { id: sellOrder.id } });
+
+                    // Exit the loop for this buy order
+                    break;
+                }
+            }
+        }
+    }
+}
+
+
+
+

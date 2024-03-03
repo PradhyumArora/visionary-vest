@@ -16,6 +16,7 @@ model User {
   activeSellOrders  ActiveSellOrders[] @relation("UserActiveSellOrders")
   completedOrders   CompletedOrders[]  @relation("UserCompletedOrders")
   currentStockHoldings StockHolding[]
+  fundsAvailable    Int @default(10000)
 }
 
 model ActiveBuyOrders {
@@ -53,7 +54,15 @@ model Order {
   CompletedOrders CompletedOrders[]
 }
 
-
+model StockHolding {
+  id          Int        @id @default(autoincrement())
+  influencerId Int       // Foreign key for Influencer
+  influencer  Influencer @relation(fields: [influencerId], references: [id])
+  buyPrice    Float      // The price at which the stock was bought
+  quantity    Int        // The number of shares held
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+}
 
 // model Investment {
 //   id          Int           @id @default(autoincrement())
@@ -65,15 +74,7 @@ model Order {
 //   influencerId   String  // Foreign key for creator
 // }
 
-model StockHolding {
-  id          Int        @id @default(autoincrement())
-  influencerId Int       // Foreign key for Influencer
-  influencer  Influencer @relation(fields: [influencerId], references: [id])
-  buyPrice    Float      // The price at which the stock was bought
-  quantity    Int        // The number of shares held
-  userId      String
-  user        User       @relation(fields: [userId], references: [id])
-}
+
 
 // Define the Order model
 // model Order {

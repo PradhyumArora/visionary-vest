@@ -1,5 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
-const data = require('../lib/influencers.json')
+const data = require('../public/influencers.json')
 
 const prisma = new PrismaClient();
 
